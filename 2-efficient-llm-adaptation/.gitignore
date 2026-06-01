@@ -1,0 +1,19 @@
+# Root-level ignore for the container repository
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python environment
+env/
+venv/
+.venv/
+ENV/
+*.py[cod]
+__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/

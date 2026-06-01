@@ -1,0 +1,37 @@
+# LoRA Fine-Tuning Configuration
+# Student-friendly defaults optimized for limited compute
+# ========================================================
+# All times/memory estimated for: GPU (8GB) or CPU
+
+model:
+  # Model size: 66M parameters (small = fast training)
+  base_model: "distilbert-base-uncased"
+  num_labels: 2  # Binary: negative=0, positive=1
+
+lora:
+  # LoRA: Low-rank adaptation adds ~73K trainable parameters
+  # Frozen base + small learnable matrices = 900x parameter reduction
+  r: 8                          # Rank of LoRA matrices (higher = more capacity)
+  lora_alpha: 16                # Scaling factor
+  lora_dropout: 0.1             # Dropout for regularization
+  target_modules: ["query", "value"]  # Adapt only attention layers
+  bias: "none"
+
+training:
+  epochs: 2                     # 2 epochs = ~4 min on GPU / ~15 min on CPU
+  batch_size: 16                # Small batch for limited memory (was 32)
+  learning_rate: 1.0e-4         # Standard for fine-tuning
+  warmup_steps: 50              # Reduced from 100 (smaller training)
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  early_stopping_patience: 2    # Stop sooner if no improvement
+  seed: 42                      # For reproducibility
+  device: "cuda"                # "cuda" for GPU, "cpu" for CPU
+
+data:
+  dataset_name: "imdb"
+  max_samples: 2000             # 2K samples = very fast iteration (was 8K)
+                                # Run time: ~4 min GPU / ~15 min CPU
+  train_test_split: 0.8         # 1600 train / 400 test
+  max_length: 128               # Token limit per review

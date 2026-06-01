@@ -1,0 +1,32 @@
+# Full training configuration
+# Use for better accuracy and understanding LoRA effectiveness
+# Runtime: ~8 min on GPU, ~30 min on CPU
+
+model:
+  base_model: "distilbert-base-uncased"
+  num_labels: 2
+
+lora:
+  r: 8                          # Standard rank
+  lora_alpha: 16
+  lora_dropout: 0.1
+  target_modules: ["query", "value"]
+  bias: "none"
+
+training:
+  epochs: 3                     # 3 epochs for better convergence
+  batch_size: 16
+  learning_rate: 1.0e-4
+  warmup_steps: 100
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  early_stopping_patience: 2
+  seed: 42
+  device: "cuda"
+
+data:
+  dataset_name: "imdb"
+  max_samples: 8000             # Larger dataset = better accuracy
+  train_test_split: 0.9         # 7200 train / 800 test
+  max_length: 128

@@ -1,0 +1,32 @@
+# Fast test configuration
+# Use this to verify setup works quickly
+# Runtime: ~2 min on GPU, ~7 min on CPU
+
+model:
+  base_model: "distilbert-base-uncased"
+  num_labels: 2
+
+lora:
+  r: 4                          # Even smaller rank for speed
+  lora_alpha: 8
+  lora_dropout: 0.1
+  target_modules: ["query", "value"]
+  bias: "none"
+
+training:
+  epochs: 1                     # Just 1 epoch for quick test
+  batch_size: 16
+  learning_rate: 1.0e-4
+  warmup_steps: 25              # Reduced warmup
+  weight_decay: 0.01
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  early_stopping_patience: 1    # Stop immediately if no improvement
+  seed: 42
+  device: "cuda"
+
+data:
+  dataset_name: "imdb"
+  max_samples: 1000             # Very small dataset
+  train_test_split: 0.8
+  max_length: 128
